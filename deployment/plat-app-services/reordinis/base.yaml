@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: reordinis
+  name: reordinis
+spec:
+  ports:
+  - name: http
+    port: 8000
+    protocol: TCP
+    targetPort: 8000
+  selector:
+    app: reordinis
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: reordinis
+  name: reordinis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reordinis
+  template:
+    metadata:
+      labels:
+        app: reordinis
+    spec:
+      containers:
+        - image: "ghcr.io/c0c0n3/kitt4sme.roughnator:latest"
+          imagePullPolicy: IfNotPresent
+          name: reordinis
+          ports:
+          - containerPort: 8000
+            name: http
+          env:
+          - name: "ORION_BASE_URL"
+            value: "http://orion:1026"
